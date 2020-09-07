@@ -780,6 +780,7 @@ public class ContextConfig implements LifecycleListener {
         webConfig();
 
         // 手动将JSP解析器初始化
+        // @See https://www.cnblogs.com/grasp/p/10061577.html
         context.addServletContainerInitializer(new JasperInitializer(), null);
 
         if (!context.getIgnoreAnnotations()) {
