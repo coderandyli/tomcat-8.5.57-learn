@@ -5,12 +5,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.apache.tomcat</groupId>
-    <artifactId>Tomcat8.5.7</artifactId>
-    <name>Tomcat8.5.7</name>
-    <version>8.5.7</version>
+    <artifactId>Tomcat8.5.57</artifactId>
+    <name>Tomcat8.5.57</name>
+    <version>8.5.57</version>
 
     <build>
-        <finalName>Tomcat8.5.7</finalName>
+        <finalName>Tomcat8.5.57</finalName>
         <sourceDirectory>java</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
         <resources>
