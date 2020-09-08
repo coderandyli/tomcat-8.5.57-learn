@@ -451,6 +451,9 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
     /**
      * The background thread that listens for incoming TCP/IP connections and
      * hands them off to an appropriate processor.
+     *
+     * 监听 Socket 连接请求
+     *
      */
     protected class Acceptor extends AbstractEndpoint.Acceptor {
 
@@ -1573,6 +1576,8 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
     /**
      * This class is the equivalent of the Worker, but will simply use in an
      * external Executor thread pool.
+     *
+     * 处理接收到的 Socket 请求
      */
     protected class SocketProcessor extends SocketProcessorBase<NioChannel> {
 
