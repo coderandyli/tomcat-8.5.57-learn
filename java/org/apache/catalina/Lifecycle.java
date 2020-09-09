@@ -79,12 +79,13 @@ package org.apache.catalina;
  * attempted transition is not valid.
  *
  * @author Craig R. McClanahan
+ *
+ * 生命周期 
  */
 public interface Lifecycle {
 
 
     // ----------------------------------------------------- Manifest Constants
-
 
     /**
      * The LifecycleEvent type for the "component before init" event.
@@ -177,6 +178,8 @@ public interface Lifecycle {
      * Add a LifecycleEvent listener to this component.
      *
      * @param listener The listener to add
+     *
+     * 添加生命周期监听器
      */
     public void addLifecycleListener(LifecycleListener listener);
 
@@ -210,6 +213,8 @@ public interface Lifecycle {
      *
      * @exception LifecycleException if this component detects a fatal error
      *  that prevents this component from being used
+     *
+     *  初始化方法：组件 start之前的准备
      */
     public void init() throws LifecycleException;
 
@@ -293,6 +298,8 @@ public interface Lifecycle {
      * Obtain the current state of the source component.
      *
      * @return The current state of the source component.
+     *
+     *  获取生命周期当前的状态
      */
     public LifecycleState getState();
 

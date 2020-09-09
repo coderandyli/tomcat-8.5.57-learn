@@ -10,7 +10,7 @@
 │   ├── ha    -- Hight available缩写，处理tomcat集群
 │   ├── loader    -- tomcat类加载器
 │   ├── manager    -- 
-│   ├── mapper
+│   ├── mapper    -- Tomcat 有Mapper 组件来匹配请求应该由哪个Wrapper容器里的Servlet来请求， Mapper 组件里保存了 Web 应用的配置信息，其实就是容器组件与访问路径的映射关系.
 │   ├── mbeans    -- Tomcat内置的jmx
 │   ├── realm    -- tomcat管理页面的权限控制
 │   ├── security    -- 安全相关

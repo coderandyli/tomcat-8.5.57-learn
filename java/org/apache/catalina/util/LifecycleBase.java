@@ -33,6 +33,8 @@ import org.apache.tomcat.util.res.StringManager;
  * Base implementation of the {@link Lifecycle} interface that implements the
  * state transition rules for {@link Lifecycle#start()} and
  * {@link Lifecycle#stop()}
+ *
+ * Lifecycle抽象基类: 实现一些公司逻辑, 生命状态的转变与维护、生命事件的触发以及监听器的添加和删除等
  */
 public abstract class LifecycleBase implements Lifecycle {
 
@@ -43,12 +45,16 @@ public abstract class LifecycleBase implements Lifecycle {
 
     /**
      * The list of registered LifecycleListeners for event notifications.
+     *
+     * 注册进来的事件监听器（Tomcat默认配置的监听器、在web.xml自定义的监听器）
      */
     private final List<LifecycleListener> lifecycleListeners = new CopyOnWriteArrayList<>();
 
 
     /**
      * The current state of the source component.
+     *
+     * 生命周期当前状态，初始化
      */
     private volatile LifecycleState state = LifecycleState.NEW;
 
@@ -86,6 +92,8 @@ public abstract class LifecycleBase implements Lifecycle {
 
     /**
      * {@inheritDoc}
+     *
+     * 添加监听器
      */
     @Override
     public void addLifecycleListener(LifecycleListener listener) {
@@ -95,6 +103,8 @@ public abstract class LifecycleBase implements Lifecycle {
 
     /**
      * {@inheritDoc}
+     *
+     * 添加监听器
      */
     @Override
     public LifecycleListener[] findLifecycleListeners() {
@@ -104,6 +114,8 @@ public abstract class LifecycleBase implements Lifecycle {
 
     /**
      * {@inheritDoc}
+     *
+     * 移除监听器
      */
     @Override
     public void removeLifecycleListener(LifecycleListener listener) {
@@ -116,6 +128,8 @@ public abstract class LifecycleBase implements Lifecycle {
      *
      * @param type  Event type
      * @param data  Data associated with event.
+     *
+     * 触发事件（状态变更）
      */
     protected void fireLifecycleEvent(String type, Object data) {
         LifecycleEvent event = new LifecycleEvent(this, type, data);
@@ -127,13 +141,18 @@ public abstract class LifecycleBase implements Lifecycle {
 
     @Override
     public final synchronized void init() throws LifecycleException {
+        // 检查状态
         if (!state.equals(LifecycleState.NEW)) {
             invalidTransition(Lifecycle.BEFORE_INIT_EVENT);
         }
 
         try {
+            //2.触发INITIALIZING事件的监听器
             setStateInternal(LifecycleState.INITIALIZING, null, false);
+
+            // 调用子类的实现
             initInternal();
+            //2.触发INITIALIZED事件的监听器
             setStateInternal(LifecycleState.INITIALIZED, null, false);
         } catch (Throwable t) {
             handleSubClassException(t, "lifecycleBase.initFail", toString());
@@ -146,6 +165,8 @@ public abstract class LifecycleBase implements Lifecycle {
      * required.
      *
      * @throws LifecycleException If the initialisation fails
+     *
+     * 子类实现自己的初始化逻辑
      */
     protected abstract void initInternal() throws LifecycleException;
 
@@ -212,6 +233,8 @@ public abstract class LifecycleBase implements Lifecycle {
      * continue to start normally.
      *
      * @throws LifecycleException Start error occurred
+     *
+     * 子类实现自己的start逻辑
      */
     protected abstract void startInternal() throws LifecycleException;
 
@@ -281,6 +304,8 @@ public abstract class LifecycleBase implements Lifecycle {
      * Changing state will trigger the {@link Lifecycle#STOP_EVENT} event.
      *
      * @throws LifecycleException Stop error occurred
+     *
+     * 子类实现自己的stop逻辑
      */
     protected abstract void stopInternal() throws LifecycleException;
 
@@ -337,6 +362,8 @@ public abstract class LifecycleBase implements Lifecycle {
 
     /**
      * {@inheritDoc}
+     *
+     * 获取当期状态
      */
     @Override
     public LifecycleState getState() {
@@ -346,6 +373,8 @@ public abstract class LifecycleBase implements Lifecycle {
 
     /**
      * {@inheritDoc}
+     *
+     * 获取当期状态名称
      */
     @Override
     public String getStateName() {
@@ -382,7 +411,9 @@ public abstract class LifecycleBase implements Lifecycle {
         setStateInternal(state, data, true);
     }
 
-
+    /**
+     * 设置state, 并调用{@link LifecycleBase#fireLifecycleEvent(String, Object)}
+     */
     private synchronized void setStateInternal(LifecycleState state, Object data, boolean check)
             throws LifecycleException {
 
@@ -420,6 +451,7 @@ public abstract class LifecycleBase implements Lifecycle {
         this.state = state;
         String lifecycleEvent = state.getLifecycleEvent();
         if (lifecycleEvent != null) {
+            // 触发监听事件
             fireLifecycleEvent(lifecycleEvent, data);
         }
     }

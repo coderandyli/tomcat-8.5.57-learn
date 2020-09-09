@@ -43,6 +43,8 @@ import org.apache.tomcat.util.res.StringManager;
  * from the HTTP rules).
  *
  * @author Remy Maucherat
+ *
+ * Tomcat 有Mapper 组件来匹配请求应该由哪个Wrapper容器里的Servlet来请求
  */
 public final class Mapper {
 
