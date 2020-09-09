@@ -36,6 +36,8 @@ import org.apache.catalina.connector.Response;
  * @author Craig R. McClanahan
  * @author Gunnar Rjnning
  * @author Peter Donald
+ *
+ * Valve 表示一个处理点，采用链式结构
  */
 public interface Valve {
 
@@ -113,6 +115,8 @@ public interface Valve {
      *  by a subsequently invoked Valve, Filter, or Servlet
      * @exception ServletException if a servlet error occurs, or is thrown
      *  by a subsequently invoked Valve, Filter, or Servlet
+     *
+     * Valve 是一个处理点，invoke方法负责处理请求
      */
     public void invoke(Request request, Response response)
         throws IOException, ServletException;

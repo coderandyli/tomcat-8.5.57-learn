@@ -144,6 +144,8 @@ public interface Servlet {
      *
      * @exception IOException
      *                if an input or output exception occurs
+     *
+     *
      */
     public void service(ServletRequest req, ServletResponse res)
             throws ServletException, IOException;

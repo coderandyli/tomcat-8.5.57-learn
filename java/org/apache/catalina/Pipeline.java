@@ -16,6 +16,8 @@
  */
 package org.apache.catalina;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.Set;
 
 /**
@@ -35,12 +37,25 @@ import java.util.Set;
  *
  * @author Craig R. McClanahan
  * @author Peter Donald
+ *
+ * Tomcat通过一层层的父子容器最终找到某个Servlet来处理请求，但是并不是只有Servlet才会处理请求，实际上这个查找路径上的父子容器都会对请求做一些处理
+ *
+ * Pipeline-Valve 组成的一个责任链模式，完成调用链
+ *
+ * 每个容器都有一个Pipeline对象，只要触发这个 Pipeline 的第一个 Valve，这个容器里 Pipeline 中的 Valve 就都会被调用到
+ *
+ * 不同容器的Pipeline如何链式触发？ Pipeline 中还有个 getBasic 方法。这个 BasicValve 处于 Valve 链表的末端，它是 Pipeline 中必不可少的一个 Valve，负责调用下层容器的 Pipeline 里的第一个 Valve
+ * @see http://images.coderandyli.com/tomcat08.jpg
+ *
+ * Wrapper 容器的最后一个 Valve 会创建一个 Filter 链，并调用 doFilter 方法，最终会调到 Servlet 的 {@link javax.servlet.Servlet#service(ServletRequest, ServletResponse)} 方法
  */
 public interface Pipeline {
 
     /**
      * @return the Valve instance that has been distinguished as the basic
      * Valve for this Pipeline (if any).
+     *
+     * 负责调用下层容器的Pipeline的第一个Valve
      */
     public Valve getBasic();
 
@@ -112,6 +127,8 @@ public interface Pipeline {
     /**
      * @return the Valve instance that has been distinguished as the basic
      * Valve for this Pipeline (if any).
+     *
+     * 职责链中的第一个 Valve
      */
     public Valve getFirst();
 
