@@ -582,6 +582,8 @@ public class Request implements HttpServletRequest {
      * to return a value, and thus enables parsing of the request URI.
      *
      * @return the Context mapped with the request
+     *
+     * 获取Context容器对象（请求到达 Engine 容器中之前，Mapper 组件已经对请求进行了路由处理，Mapper 组件通过请求的 URL 定位了相应的容器，并且把容器对象保存到了请求对象中）
      */
     public Context getContext() {
         return mappingData.context;
@@ -637,6 +639,7 @@ public class Request implements HttpServletRequest {
 
     /**
      * @return the Host within which this Request is being processed.
+     *  获取Host容器实例（请求到达 Engine 容器中之前，Mapper 组件已经对请求进行了路由处理，Mapper 组件通过请求的 URL 定位了相应的容器，并且把容器对象保存到了请求对象中）
      */
     public Host getHost() {
         return mappingData.host;

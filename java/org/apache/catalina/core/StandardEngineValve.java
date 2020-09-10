@@ -35,6 +35,8 @@ import org.apache.tomcat.util.res.StringManager;
  * when processing HTTP requests.
  *
  * @author Craig R. McClanahan
+ *
+ * 在{@link StandardEngine#StandardEngine()} 被调用
  */
 final class StandardEngineValve extends ValveBase {
 
@@ -71,6 +73,12 @@ final class StandardEngineValve extends ValveBase {
         throws IOException, ServletException {
 
         // Select the Host to be used for this Request
+        /**
+         * 拿到请求中的Host容器
+         *
+         * 处理请求的 Host 容器对象是从请求中拿到的，请求对象中怎么会有 Host 容器？
+         *      这是因为请求到达 Engine 容器中之前，Mapper 组件已经对请求进行了路由处理，Mapper 组件通过请求的 URL 定位了相应的容器，并且把容器对象保存到了请求对象中
+         */
         Host host = request.getHost();
         if (host == null) {
             response.sendError
@@ -84,6 +92,7 @@ final class StandardEngineValve extends ValveBase {
         }
 
         // Ask this Host to process this request
+        // 调用host容器中Pipeline中的第一个valve
         host.getPipeline().getFirst().invoke(request, response);
 
     }

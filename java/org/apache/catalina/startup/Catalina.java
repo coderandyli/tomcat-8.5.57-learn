@@ -68,6 +68,10 @@ import org.xml.sax.SAXParseException;
  *
  * @author Craig R. McClanahan
  * @author Remy Maucherat
+ * Catalina 的主要任务就是创建 Server，它不是直接 new 一个 Server 实例就完事了，而是需要解析server.xml，把在server.xml里配置的各种组件一一创建出来，
+ * 接着调用 Server 组件的 init 方法和 start 方法，这样整个 Tomcat 就启动起来了。作为“管理者”，Catalina 还需要处理各种“异常”情况，比如当我们通过“Ctrl + C”关闭 Tomcat 时，
+ * Tomcat 将如何优雅的停止并且清理资源呢？因此 Catalina 在 JVM 中注册一个“关闭钩子”。
+ *
  */
 public class Catalina {
 
@@ -669,13 +673,16 @@ public class Catalina {
 
     /**
      * Start a new server instance.
+     *
      */
     public void start() {
 
+        //1. 如果持有的Server实例为空，就解析server.xml创建出来
         if (getServer() == null) {
             load();
         }
 
+        //2. 如果创建失败，报错退出
         if (getServer() == null) {
             log.fatal("Cannot start server. Server instance is not configured.");
             return;
@@ -684,6 +691,7 @@ public class Catalina {
         long t1 = System.nanoTime();
 
         // Start the new server
+        //3.启动Server
         try {
             getServer().start();
         } catch (LifecycleException e) {
@@ -702,6 +710,7 @@ public class Catalina {
         }
 
         // Register shutdown hook
+        //创建并注册关闭钩子
         if (useShutdownHook) {
             if (shutdownHook == null) {
                 shutdownHook = new CatalinaShutdownHook();
@@ -718,6 +727,7 @@ public class Catalina {
             }
         }
 
+        //用await方法监听停止请求
         if (await) {
             await();
             stop();
@@ -727,6 +737,9 @@ public class Catalina {
 
     /**
      * Stop an existing server instance.
+     *
+     * 停止现有的server
+     *      释放和清理所有的资源
      */
     public void stop() {
 
@@ -852,6 +865,10 @@ public class Catalina {
     // XXX Should be moved to embedded !
     /**
      * Shutdown hook which will perform a clean shutdown of Catalina if needed.
+     *
+     * 关闭钩子： 在 JVM 关闭时做一些清理工作，比如将缓存数据刷到磁盘上，或者清理一些临时文件
+     *
+     * “关闭钩子”其实就是一个线程，JVM 在停止之前会尝试执行这个线程的 run 方法
      */
     protected class CatalinaShutdownHook extends Thread {
 

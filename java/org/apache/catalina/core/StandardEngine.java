@@ -50,6 +50,8 @@ import org.apache.juli.logging.LogFactory;
  * You can set the jvmRoute direct or with the System.property <b>jvmRoute</b>.
  *
  * @author Craig R. McClanahan
+ *
+ * 请求转发给某一个 Host 子容器来处理，具体是通过 Valve 来实现
  */
 public class StandardEngine extends ContainerBase implements Engine {
 
@@ -64,6 +66,7 @@ public class StandardEngine extends ContainerBase implements Engine {
     public StandardEngine() {
 
         super();
+        // 在pipeline中设置 basic, 将请求转发给子容器
         pipeline.setBasic(new StandardEngineValve());
         /* Set the jmvRoute using the system property jvmRoute */
         try {

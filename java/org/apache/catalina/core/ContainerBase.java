@@ -125,6 +125,9 @@ import org.apache.tomcat.util.res.StringManager;
  * class comments of the implementation class.
  *
  * @author Craig R. McClanahan
+ *
+ * 容器基类
+ *  定义了子容器集合，实现了其增删改查；甚至连子组件的启动和停止都提供了默认实现，比如 ContainerBase 会用专门的线程池来启动子容器
  */
 public abstract class ContainerBase extends LifecycleMBeanBase
         implements Container {
@@ -159,6 +162,8 @@ public abstract class ContainerBase extends LifecycleMBeanBase
 
     /**
      * The child Containers belonging to this Container, keyed by name.
+     *
+     * 子容器集合
      */
     protected final HashMap<String, Container> children = new HashMap<>();
 
@@ -708,6 +713,8 @@ public abstract class ContainerBase extends LifecycleMBeanBase
      *  a name unique from that of existing children of this Container
      * @exception IllegalStateException if this Container does not support
      *  child Containers
+     *
+     * 新增一个容器
      */
     @Override
     public void addChild(Container child) {
@@ -821,6 +828,8 @@ public abstract class ContainerBase extends LifecycleMBeanBase
      * Container.
      *
      * @param child Existing child Container to be removed
+     *
+     * 移除一个子容器
      */
     @Override
     public void removeChild(Container child) {

@@ -16,6 +16,8 @@
  */
 package org.apache.catalina;
 
+import org.apache.catalina.core.StandardService;
+
 /**
  * An <b>Engine</b> is a Container that represents the entire Catalina servlet
  * engine.  It is useful in the following types of scenarios:
@@ -39,6 +41,11 @@ package org.apache.catalina;
  * should throw <code>IllegalArgumentException</code>.
  *
  * @author Craig R. McClanahan
+ *
+ * 容器之Engine： 表示引擎，用来管理多个虚拟站点，一个 Service 最多只能有一个 Engine
+ * 顶级容器 由{@link StandardService#initInternal()} 启动、{@link StandardService#startInternal()} 启动
+ *
+ * 其实现类{@link org.apache.catalina.core.StandardEngine}
  */
 public interface Engine extends Container {
 

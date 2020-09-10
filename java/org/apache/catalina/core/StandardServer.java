@@ -58,6 +58,11 @@ import org.apache.tomcat.util.res.StringManager;
  * (but not required) when deploying and starting Catalina.
  *
  * @author Craig R. McClanahan
+ *
+ *
+ * Server 组件的具体实现类是 StandardServer，我们来看下 StandardServer 具体实现了哪些功能。Server 继承了 LifecycleBase，
+ * 它的生命周期被统一管理，并且它的子组件是 Service，因此它还需要管理 Service 的生命周期，也就是说在启动时调用 Service 组件的启动方法，
+ * 在停止时调用它们的停止方法。Server 在内部维护了若干 Service 组件，它是以数组来保存的，那 Server 是如何添加一个 Service 到数组中的呢？
  */
 public final class StandardServer extends LifecycleMBeanBase implements Server {
 
@@ -128,6 +133,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
 
     /**
      * The set of Services associated with this Server.
+     *  service组件的数组
      */
     private Service services[] = new Service[0];
     private final Object servicesLock = new Object();
@@ -340,6 +346,8 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      * Add a new Service to the set of defined Services.
      *
      * @param service The Service to be added
+     *
+     * 添加service
      */
     @Override
     public void addService(Service service) {
@@ -347,11 +355,14 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
         service.setServer(this);
 
         synchronized (servicesLock) {
+            //创建一个长度+1的新数组 (为了节省空间，数组长度是动态)
             Service results[] = new Service[services.length + 1];
+            //将老的数据复制过去
             System.arraycopy(services, 0, results, 0, services.length);
             results[services.length] = service;
             services = results;
 
+            //启动Service组件
             if (getState().isAvailable()) {
                 try {
                     service.start();
@@ -361,6 +372,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
             }
 
             // Report this property change to interested listeners
+            // 触发监听事件
             support.firePropertyChange("service", null, service);
         }
 
@@ -392,6 +404,11 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      * Wait until a proper shutdown command is received, then return.
      * This keeps the main thread alive - the thread pool listening for http
      * connections is daemon threads.
+     *
+     * 在 await 方法里会创建一个 Socket 监听 8005 端口，并在一个死循环里接收 Socket 上的连接请求，如果有新的连接到来就建立连接，
+     * 然后从 Socket 中读取数据；如果读到的数据是停止命令“SHUTDOWN”，就退出循环，进入 stop 流程。
+     *
+     * 在{@link Catalina#start()}方法中被调用
      */
     @Override
     public void await() {
@@ -844,6 +861,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
             }
         }
         // Initialize our defined Services
+        // 初始化 service (Server的子组件是Service, 所以service的初始化由Server触发)
         for (Service service : services) {
             service.init();
         }

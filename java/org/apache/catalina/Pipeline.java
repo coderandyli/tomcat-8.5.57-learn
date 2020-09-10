@@ -16,6 +16,9 @@
  */
 package org.apache.catalina;
 
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.Response;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.util.Set;
@@ -47,7 +50,7 @@ import java.util.Set;
  * 不同容器的Pipeline如何链式触发？ Pipeline 中还有个 getBasic 方法。这个 BasicValve 处于 Valve 链表的末端，它是 Pipeline 中必不可少的一个 Valve，负责调用下层容器的 Pipeline 里的第一个 Valve
  * @see http://images.coderandyli.com/tomcat08.jpg
  *
- * Wrapper 容器的最后一个 Valve 会创建一个 Filter 链，并调用 doFilter 方法，最终会调到 Servlet 的 {@link javax.servlet.Servlet#service(ServletRequest, ServletResponse)} 方法
+ * Wrapper ({@link org.apache.catalina.core.StandardWrapper})容器的最后一个 Valve ({@link org.apache.catalina.core.StandardWrapperValve#invoke(Request, Response)})会创建一个 Filter 链，并调用 doFilter 方法，最终会调到 Servlet 的 {@link javax.servlet.Servlet#service(ServletRequest, ServletResponse)} 方法
  */
 public interface Pipeline {
 

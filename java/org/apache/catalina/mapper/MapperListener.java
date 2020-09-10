@@ -44,6 +44,8 @@ import org.apache.tomcat.util.res.StringManager;
  *
  * @author Remy Maucherat
  * @author Costin Manolache
+ *
+ * 映射器(Mapper)监听器
  */
 public class MapperListener extends LifecycleMBeanBase
         implements ContainerListener, LifecycleListener {

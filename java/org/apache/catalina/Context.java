@@ -57,6 +57,8 @@ import org.apache.tomcat.util.http.CookieProcessor;
  * <p>
  *
  * @author Craig R. McClanahan
+ *
+ * 容器之Context: 表示一个Web引用程序
  */
 public interface Context extends Container, ContextBind {
 

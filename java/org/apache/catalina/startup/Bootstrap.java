@@ -44,6 +44,9 @@ import org.apache.juli.logging.LogFactory;
  *
  * @author Craig R. McClanahan
  * @author Remy Maucherat
+ *
+ *
+ * Bootstrap 的主要任务是初始化 Tomcat 的类加载器，并且创建 Catalina。
  */
 public final class Bootstrap {
 

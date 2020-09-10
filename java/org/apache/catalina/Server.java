@@ -45,6 +45,8 @@ import org.apache.catalina.startup.Catalina;
  * class in its constructor(s).
  *
  * @author Craig R. McClanahan
+ *
+ * 注释想看其实现类{@link org.apache.catalina.core.StandardServer}
  */
 public interface Server extends Lifecycle {
 
